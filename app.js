@@ -1,16 +1,25 @@
 const express = require('express');
+const cookieparser = require('cookie-parser');
 const app = express();
 const port = 3000;
 
-const goodsRouter = require("./routes/goods.js");
+const goodsRouter = require("./routes/goods");
 const cartsRouter = require("./routes/carts.js");
-const connect = require("./schemas/index.js");
+const usersRouter = require("./routes/users.js");
+const authRouter = require("./routes/auth.js");
+
+const connect = require("./schemas");
 connect();
 
-app.use(express.json());
-app.use("/api", [goodsRouter, cartsRouter]);
 
-app.get("/", (req, res) => {
+app.use(express.json());
+
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieparser());
+app.use(express.static("assets"));
+app.use("/api", [goodsRouter, cartsRouter, usersRouter, authRouter]);
+
+app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
